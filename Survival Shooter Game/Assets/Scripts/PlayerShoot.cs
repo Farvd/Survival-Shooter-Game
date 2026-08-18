@@ -7,7 +7,8 @@ public class PlayerShoot : MonoBehaviour
 {
     public GameObject LocatorPrefab;
     public TrailRenderer BulletTrailPrefab;
-    public GameObject HitLocater;
+    public float LastShootTime;
+    public float ShootDelay = 0.001f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,14 +27,21 @@ public class PlayerShoot : MonoBehaviour
     }
     void Shoot()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 100f))
+        if (LastShootTime + ShootDelay < Time.time)
         {
-            GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
-            Destroy(locator, 10f);
-            TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
-            StartCoroutine(spawnTrail(trail, hit.point));
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 100f))
+            {
+                GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
+                if (locator != null)
+                {
+                    Destroy(locator, 10f);
+                }
+                
+                TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
+                StartCoroutine(spawnTrail(trail, hit.point));
+            }
+            LastShootTime = Time.time;
         }
     }
 

@@ -555,6 +555,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 185915939}
     - target: {fileID: 211324480197361420, guid: c9ec49360a3a0bd49a7df62c9a51f062, type: 3}
+      propertyPath: ShootDelay
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 211324480197361420, guid: c9ec49360a3a0bd49a7df62c9a51f062, type: 3}
       propertyPath: LocatorPrefab
       value: 
       objectReference: {fileID: 185915939}
