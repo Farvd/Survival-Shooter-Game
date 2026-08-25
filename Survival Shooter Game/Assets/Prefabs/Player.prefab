@@ -78,7 +78,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.09, z: 0}
 --- !u!136 &212671254301120041
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.18, z: 0}
 --- !u!114 &211324480197361420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShoot
   LocatorPrefab: {fileID: 0}
   BulletTrailPrefab: {fileID: 0}
+  LastShootTime: 0
+  ShootDelay: 0.001
 --- !u!1 &8787222626339332216
 GameObject:
   m_ObjectHideFlags: 0
