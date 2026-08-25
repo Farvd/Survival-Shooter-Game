@@ -1,15 +1,39 @@
 using Mono.Cecil;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+[System.Serializable]
+public class PlayerWeapon
+{
+
+    public string Name;
+    public float Damage;
+    public float ShootDelay;
+    public float Range;
+    public bool isShotgun;
+    public bool isAutomatic;
+    public Vector3 Spread;
+    public GameObject WeaponPrefab;
+}
 public class PlayerShoot : MonoBehaviour
 {
+    [Header("Main")]
     public GameObject LocatorPrefab;
     public TrailRenderer BulletTrailPrefab;
     public float LastShootTime;
     public float ShootDelay = 0.001f;
-    private 
+    public int CurrentWeapon = 0;
+
+
+    [Header("Weapons")]
+
+    public PlayerWeapon[] Weapons;
+
+
     void Awake()
     {
         LastShootTime = Time.time;
@@ -27,15 +51,20 @@ public class PlayerShoot : MonoBehaviour
         {
             Shoot();
         }
+        CheckWeaponType();
         
     }
     void Shoot()
     {
         if (LastShootTime + ShootDelay < Time.time)
         {
+
+            Vector3 direction = GetDirection();
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 100f))
+            if (Physics.Raycast(Camera.main.transform.position, direction, out hit, Weapons[CurrentWeapon].Range))
             {
+
+
                 GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
                 if (locator != null)
                 {
@@ -69,5 +98,34 @@ public class PlayerShoot : MonoBehaviour
         trail.transform.position = hitPoint;
         Destroy(trail.gameObject, trail.time);
     }
+    private Vector3 GetDirection()
+    {
+        Vector3 direction = Camera.main.transform.forward;
+        direction += new Vector3(
+            Random.Range(-Weapons[CurrentWeapon].Spread.x, Weapons[CurrentWeapon].Spread.x), 
+            Random.Range(-Weapons[CurrentWeapon].Spread.y, Weapons[CurrentWeapon].Spread.y), 
+            Random.Range(-Weapons[CurrentWeapon].Spread.z, Weapons[CurrentWeapon].Spread.z));
+        return direction.normalized;
+    }
+
+    public void CheckWeaponType()
+    {
+        for (int i = 0; i < Weapons.Length; i++)
+        {
+                GameObject currentHeldWeapon = Camera.main.transform.GetChild(i).gameObject;
+                if(currentHeldWeapon.activeInHierarchy && currentHeldWeapon.name != Weapons[CurrentWeapon].WeaponPrefab.name)
+                {
+                    currentHeldWeapon.SetActive(false);
+                }
+                if (!currentHeldWeapon.activeInHierarchy && currentHeldWeapon.name == Weapons[CurrentWeapon].WeaponPrefab.name)
+                {
+                    currentHeldWeapon.SetActive(true);
+                }
+            }
+    }
+
+
+
+
 }
 

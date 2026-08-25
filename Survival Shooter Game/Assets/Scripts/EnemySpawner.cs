@@ -4,8 +4,16 @@ using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
+
+
+
+
+
 public class EnemySpawner : MonoBehaviour
 {
+
+    
+
 
     public bool Spawnable = true;
     public Transform SpawnLocation;
