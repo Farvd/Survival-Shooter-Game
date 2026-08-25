@@ -18,6 +18,7 @@ public class PlayerWeapon
     public bool isAutomatic;
     public Vector3 Spread;
     public GameObject WeaponPrefab;
+    public int AmmoAmount;
 }
 public class PlayerShoot : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class PlayerShoot : MonoBehaviour
     public float LastShootTime;
     public float ShootDelay = 0.001f;
     public int CurrentWeapon = 0;
+    private bool wasLeftButtonPressed = false;
 
 
     [Header("Weapons")]
@@ -38,51 +40,70 @@ public class PlayerShoot : MonoBehaviour
     {
         LastShootTime = Time.time;
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if ((Mouse.current.leftButton.isPressed))
+        bool isLeftButtonPressed = Mouse.current.leftButton.isPressed;
+
+        if (isLeftButtonPressed)
         {
-            Shoot();
+            if (Weapons[CurrentWeapon].isAutomatic)
+            {
+                Shoot();
+            }
+            else if (!wasLeftButtonPressed)
+            {
+                Shoot();
+            }
         }
+
+        wasLeftButtonPressed = isLeftButtonPressed;
         CheckWeaponType();
-        
     }
+
     void Shoot()
     {
-        if (LastShootTime + ShootDelay < Time.time)
+        if (LastShootTime + Weapons[CurrentWeapon].ShootDelay < Time.time)
         {
+            int shots = 0;
+            if (Weapons[CurrentWeapon].isShotgun)
+            {
+                shots = 30;
+            }
 
+            for (int i = 0; i < shots; i++)
+            { 
             Vector3 direction = GetDirection();
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, direction, out hit, Weapons[CurrentWeapon].Range))
-            {
-
-
-                GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
-                if (locator != null)
+                if (Physics.Raycast(Camera.main.transform.position, direction, out hit, Weapons[CurrentWeapon].Range))
                 {
-                    Destroy(locator, 10f);
-                }
-                EnemyHealth targetHit = hit.collider.gameObject.GetComponent<EnemyHealth>();
-                if (targetHit != null)
-                {
-                    targetHit.TakeDamage(12f);
-                    Destroy(locator);
+                    GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
+                    if (locator != null)
+                    {
+                        Destroy(locator, 10f);
+                    }
+                    EnemyHealth targetHit = hit.collider.gameObject.GetComponent<EnemyHealth>();
+                    if (targetHit != null)
+                    {
+                        targetHit.TakeDamage(Weapons[CurrentWeapon].Damage);
+                        Destroy(locator);
+                    }
+                    TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
+                    StartCoroutine(spawnTrail(trail, hit.point));
                 }
 
 
-                TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
-                StartCoroutine(spawnTrail(trail, hit.point));
             }
             LastShootTime = Time.time;
         }
+
+
+
+
     }
 
     private IEnumerator spawnTrail(TrailRenderer trail, Vector3 hitPoint)
@@ -123,9 +144,5 @@ public class PlayerShoot : MonoBehaviour
                 }
             }
     }
-
-
-
-
 }
 
