@@ -9,7 +9,11 @@ public class PlayerShoot : MonoBehaviour
     public TrailRenderer BulletTrailPrefab;
     public float LastShootTime;
     public float ShootDelay = 0.001f;
-
+    private 
+    void Awake()
+    {
+        LastShootTime = Time.time;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,7 +41,14 @@ public class PlayerShoot : MonoBehaviour
                 {
                     Destroy(locator, 10f);
                 }
-                
+                EnemyHealth targetHit = hit.collider.gameObject.GetComponent<EnemyHealth>();
+                if (targetHit != null)
+                {
+                    targetHit.TakeDamage(12f);
+                    Destroy(locator);
+                }
+
+
                 TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
                 StartCoroutine(spawnTrail(trail, hit.point));
             }
