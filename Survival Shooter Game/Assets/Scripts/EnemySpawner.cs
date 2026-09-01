@@ -5,19 +5,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
 
-
-
-
-
 public class EnemySpawner : MonoBehaviour
 {
-
-    
-
-
     public bool Spawnable = true;
     public Transform SpawnLocation;
     public GameObject EnemyPrefab;
+    public Transform PlayerTransform;
 
     void OnCollisionStay(Collision collision)
     {
@@ -29,12 +22,14 @@ public class EnemySpawner : MonoBehaviour
         Spawnable = true;
     }
 
-
     void Start()
     {
+        if (PlayerTransform == null)
+        {
+            PlayerTransform = FindFirstObjectByType<PlayerShoot>()?.transform;
+        }
         SpawnEnemy(100);
     }
-
 
     public void SpawnEnemy(int amount)
     {
@@ -49,9 +44,13 @@ public class EnemySpawner : MonoBehaviour
             if (!Spawnable) continue;
 
             GameObject newEnemy = Instantiate(EnemyPrefab, spawnPos, SpawnLocation != null ? SpawnLocation.rotation : Quaternion.identity);
-
-
-
+            
+            // Set player reference for EnemyMovement component
+            EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
+            if (enemyMovement != null && PlayerTransform != null)
+            {
+                enemyMovement.player = PlayerTransform;
+            }
         }
     }
 }

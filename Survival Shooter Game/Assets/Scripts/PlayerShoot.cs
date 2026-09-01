@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class PlayerWeapon
 {
-
     public string Name;
     public float Damage;
     public float ShootDelay;
@@ -30,9 +29,7 @@ public class PlayerShoot : MonoBehaviour
     public int CurrentWeapon = 0;
     private bool wasLeftButtonPressed = false;
 
-
     [Header("Weapons")]
-
     public PlayerWeapon[] Weapons;
 
 
@@ -60,7 +57,6 @@ public class PlayerShoot : MonoBehaviour
                 Shoot();
             }
         }
-
         wasLeftButtonPressed = isLeftButtonPressed;
         CheckWeaponType();
     }
@@ -69,7 +65,7 @@ public class PlayerShoot : MonoBehaviour
     {
         if (LastShootTime + Weapons[CurrentWeapon].ShootDelay < Time.time)
         {
-            int shots = 0;
+            int shots = 1;
             if (Weapons[CurrentWeapon].isShotgun)
             {
                 shots = 30;
@@ -84,26 +80,21 @@ public class PlayerShoot : MonoBehaviour
                     GameObject locator = Instantiate(LocatorPrefab, hit.point, Quaternion.identity);
                     if (locator != null)
                     {
-                        Destroy(locator, 10f);
+                        Destroy(locator, 1f);
                     }
                     EnemyHealth targetHit = hit.collider.gameObject.GetComponent<EnemyHealth>();
                     if (targetHit != null)
                     {
+                        print("Hit");
                         targetHit.TakeDamage(Weapons[CurrentWeapon].Damage);
                         Destroy(locator);
                     }
                     TrailRenderer trail = Instantiate(BulletTrailPrefab, Camera.main.transform.position, Quaternion.identity);
                     StartCoroutine(spawnTrail(trail, hit.point));
                 }
-
-
             }
             LastShootTime = Time.time;
         }
-
-
-
-
     }
 
     private IEnumerator spawnTrail(TrailRenderer trail, Vector3 hitPoint)
@@ -119,6 +110,8 @@ public class PlayerShoot : MonoBehaviour
         trail.transform.position = hitPoint;
         Destroy(trail.gameObject, trail.time);
     }
+
+
     private Vector3 GetDirection()
     {
         Vector3 direction = Camera.main.transform.forward;

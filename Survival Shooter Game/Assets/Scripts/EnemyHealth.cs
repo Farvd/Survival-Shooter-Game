@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public float MaxHealth = 100f;
-    private float currentHealth;
+    public float currentHealth;
 
     void Start()
     {
@@ -13,7 +13,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
-        Debug.Log($"Enemy hit! Health: {currentHealth}");
+        print($"Enemy took {damageAmount} damage, current health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
