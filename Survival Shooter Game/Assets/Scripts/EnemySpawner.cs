@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
         {
             PlayerTransform = FindFirstObjectByType<PlayerShoot>()?.transform;
         }
-        SpawnEnemy(100);
+        SpawnEnemy(20);
     }
 
     public void SpawnEnemy(int amount)
