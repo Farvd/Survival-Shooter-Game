@@ -40,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            Vector3 spawnPos = new Vector3(Random.Range(-200, 200), 0, Random.Range(-200, 200));
+            Vector3 spawnPos = new Vector3(Random.Range(-46, 46), 0, Random.Range(-46, 36));
             if (!Spawnable) continue;
 
             GameObject newEnemy = Instantiate(EnemyPrefab, spawnPos, SpawnLocation != null ? SpawnLocation.rotation : Quaternion.identity);
