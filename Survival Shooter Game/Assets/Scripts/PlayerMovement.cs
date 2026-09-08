@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float terminalVelcity = 53f;
     private float verticalvelocity;
+    private float lookAngle = 0;
 
     void Awake()
 
@@ -114,12 +115,17 @@ public class PlayerMovement : MonoBehaviour
 
         void CameraMovement()
         {
-
+            
             mouseSensitivity = 2f;
             float TurnDegrees = Mouse.current.delta.x.ReadValue() * 0.1f * mouseSensitivity;
+  
+
             float LookDegrees = Mouse.current.delta.y.ReadValue() * 0.1f * mouseSensitivity;
-            firstPersonCam.transform.Rotate(-LookDegrees, 0, 0);
+            //firstPersonCam.transform.Rotate(-LookDegrees, 0, 0);
             transform.Rotate(0, TurnDegrees, 0);
+            lookAngle -= LookDegrees;
+            lookAngle = Mathf.Clamp(lookAngle,-80,80);
+            firstPersonCam.transform.localRotation = Quaternion.Euler(lookAngle,0,0);
         }
 
     }
