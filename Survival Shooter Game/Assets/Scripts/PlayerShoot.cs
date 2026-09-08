@@ -58,7 +58,9 @@ public class PlayerShoot : MonoBehaviour
             }
         }
         wasLeftButtonPressed = isLeftButtonPressed;
+        checkChangeWeapon();
         CheckWeaponType();
+        
     }
 
     void Shoot()
@@ -136,6 +138,18 @@ public class PlayerShoot : MonoBehaviour
                     currentHeldWeapon.SetActive(true);
                 }
             }
+    }
+
+    public void checkChangeWeapon(){
+        if(Keyboard.current.digit1Key.wasPressedThisFrame){
+            CurrentWeapon = 0;
+        }
+        if(Keyboard.current.digit2Key.wasPressedThisFrame){
+            CurrentWeapon = 1;
+        }
+        if(Keyboard.current.digit3Key.wasPressedThisFrame){
+            CurrentWeapon = 2;
+        }
     }
 }
 
