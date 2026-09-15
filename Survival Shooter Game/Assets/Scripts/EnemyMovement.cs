@@ -9,6 +9,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Start()
     {
+        Physics.IgnoreLayerCollision(6,7,true);
         if (agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
